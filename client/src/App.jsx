@@ -26,9 +26,11 @@ function App() {
 
   //render HTML content
   const createMarkup = (htmlContent) => {
-    return { __html: DOMPurify.sanitize(htmlContent) };
+    // return { __html: DOMPurify.sanitize(htmlContent) };
+    const contentWithEllipses = htmlContent.length > 300 ? htmlContent.substring(0, 300) + "..." : htmlContent;
+    return { __html: DOMPurify.sanitize(contentWithEllipses) };
   };
-  
+
   const deleteBlog = (slug) => {
     Swal.fire({
       title: 'Are you sure?',
@@ -59,25 +61,49 @@ function App() {
   return (
     <div className="container p-5">
       <NavbarComponent />
-      {blogs.map((blog, index) => (
-        <div className="row" key={index} style={{ borderBottom: '1px solid silver' }}>
-          <div className="col pt-3 pb-2">
-            <Link to={`/blog/${blog.slug}`}>
-              <h2> {blog.title} </h2>
-            </Link>
+      <div className="row row-cols-1 row-cols-md-3 g-4"> {/* row-cols-md-3 ensures 3 columns per row on medium devices */}
+        {blogs.map((blog, index) => (
+          <div className="col" key={index}>
+            <div className="card h-100"> {/* h-100 makes the cards of equal height */}
+              <div className="card-body">
+                <Link to={`/blog/${blog.slug}`} className="text-decoration-none">
+                  <h2 className="card-title text-dark">{blog.title}</h2>
+                </Link>
+                <div className="card-text" dangerouslySetInnerHTML={createMarkup(blog.content.substring(0, 300))} />
+                <p className="text-muted">
+                  Author: {blog.author}, Published: {new Date(blog.createdAt).toLocaleString()}
+                </p>
+              </div>
+              <div className="card-footer">
+                <Link className="btn btn-outline-success" to={`/blog/edit/${blog.slug}`}>Edit Content</Link> &nbsp;
+                <button className="btn btn-outline-danger" onClick={() => deleteBlog(blog.slug)}>Remove Content</button>
+              </div>
+            </div>
           </div>
-          <div className="pt-3" dangerouslySetInnerHTML={createMarkup(blog.content.substring(0, 300))}></div>
-          <div>
-            <p className="text-muted">ผู้เขียน / Author: {blog.author}, เผยแพร่ / Published: {new Date(blog.createdAt).toLocaleString()} </p>
-          </div>
-          <p>
-            <Link className="btn btn-outline-success" to={`/blog/edit/${blog.slug}`}>Edit Content</Link> &nbsp;
-            <button className="btn btn-outline-danger" onClick={() => deleteBlog(blog.slug)}>Remove Content</button>
-          </p>
-        </div>
-
-      ))}
+        ))}
+      </div>
     </div>
+    // <div className="container p-5">
+    //   <NavbarComponent />
+    //   {blogs.map((blog, index) => (
+    //     <div className="card mb-3" key={index} style={{ borderBottom: '1px solid silver' }}>
+    //       <div className="card-body">
+    //         <Link to={`/blog/${blog.slug}`} className="text-decoration-none">
+    //           <h2 className="card-title text-dark"> {blog.title} </h2>
+    //         </Link>
+    //       </div>
+    //       <div className="card-text" dangerouslySetInnerHTML={createMarkup(blog.content.substring(0, 300)) }></div>
+    //       <div>
+    //         <p className="text-muted">ผู้เขียน / Author: {blog.author}, เผยแพร่ / Published: {new Date(blog.createdAt).toLocaleString()} </p>
+    //       </div>
+    //       <div className="d-flex">
+    //         <Link className="btn btn-outline-success" to={`/blog/edit/${blog.slug}`}>Edit Content</Link> &nbsp;
+    //         <button className="btn btn-outline-danger" onClick={() => deleteBlog(blog.slug)}>Remove Content</button>
+    //       </div>
+    //     </div>
+
+    //   ))}
+    // </div>
   )
 }
 

@@ -1,4 +1,3 @@
-import NavbarComponent from "./navbarComponent";
 import { useState } from "react";
 import axios from "axios";
 import Swal from "sweetalert2";
@@ -40,8 +39,7 @@ const LoginComponent = () => {
     };
     return (
         <div className="container p-5">
-            <NavbarComponent />
-            <h1>เข้าสู่ระบบ / Login</h1>
+            <h1 className="text-center">เข้าสู่ระบบ / Login</h1>
             {/* {JSON.stringify(state)} */}
             <form onSubmit={submitForm}>
                 <div className="form-group">

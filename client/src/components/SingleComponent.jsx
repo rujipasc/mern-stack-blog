@@ -16,6 +16,10 @@ const SingleComponent = () => {
     const createMarkup = (htmlContent) => {
       return { __html: DOMPurify.sanitize(htmlContent) };
     };
+    
+    const navigateToEdit = () => {
+        navigate(`/blog/edit/${slug}`);
+    }
 
     useEffect(() => {
         // Assuming you have an API endpoint to fetch a blog by slug
@@ -46,10 +50,8 @@ const SingleComponent = () => {
                   'success'
                 );
               })
-              .then((result) => {
-                if (result.isConfirmed) {
+              .then(() => {
                   navigate('/');
-                }
               })
               .catch((error) => {
                 console.error('Deletion error:', error);
@@ -72,7 +74,7 @@ const SingleComponent = () => {
               <p className='text-muted'>ผู้แต่ง / Author: {blog.author}, เผยแพร่ / Published: {new Date(blog.createdAt).toLocaleString()}</p>
            </div>}
              <p>
-                <button className="btn btn-outline-success">Edit Content</button> &nbsp;
+                <button className="btn btn-outline-success" onClick={navigateToEdit}>Edit Content</button> &nbsp;
                 <button className="btn btn-outline-danger" onClick={() => deleteBlog(blog.slug)}>Remove Content</button>
             </p>
         </div>
